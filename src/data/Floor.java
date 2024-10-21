@@ -1,4 +1,7 @@
 package data;
+
+import exceptions.InvalidItemFormatException;
+
 import java.util.*;
 import java.io.*;
 
@@ -45,20 +48,30 @@ public class Floor {
         return null;
     }
 
-    public boolean loadItemsFromFile(String filename) {
+    public List<Item> getItems() {
+        return new ArrayList<>(items); // Returning a copy to prevent external modifications.
+    }
+
+    public boolean loadItemsFromFile(String filename) throws InvalidItemFormatException {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split(";");
                 if (parts.length == 6) {
-                    int id = Integer.parseInt(parts[0].trim());
-                    String name = parts[1].trim();
-                    String type = parts[2].trim();
-                    int quantity = Integer.parseInt(parts[3].trim());
-                    double weight = Double.parseDouble(parts[4].trim());
-                    String description = parts[5].trim();
-                    Item item = new Item(id, name, type, quantity, weight, description);
-                    addItem(item);
+                    try {
+                        int id = Integer.parseInt(parts[0].trim());
+                        String name = parts[1].trim();
+                        String type = parts[2].trim();
+                        int quantity = Integer.parseInt(parts[3].trim());
+                        double weight = Double.parseDouble(parts[4].trim());
+                        String description = parts[5].trim();
+                        Item item = new Item(id, name, type, quantity, weight, description);
+                        addItem(item);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidItemFormatException("Invalid data format in items file: " + line);
+                    }
+                } else {
+                    throw new InvalidItemFormatException("Invalid item format in items file: " + line);
                 }
             }
             return true;
@@ -71,10 +84,26 @@ public class Floor {
     public void saveItemsToFile(String filename) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
             for (Item item : items) {
-                bw.write(String.format("%d,%s,%s,%d,%.2f,%s\n", item.getId(), item.getName(), item.getType(), item.getQuantity(), item.getWeight(), item.getDescription()));
+                bw.write(item.toFileString() + "\n");
             }
         } catch (IOException e) {
             System.out.println("Error saving items to file: " + e.getMessage());
         }
+    }
+
+
+    public boolean manuallyAddItemToFloor(String filename, int id, String name, String type, int quantity, double weight, String description) {
+        Item item = new Item(id, name, type, quantity, weight, description);
+        addItem(item);
+        saveItemsToFile(filename);
+        return true;
+    }
+
+    public boolean manuallyRemoveItemFromFloor(String filename, int id) {
+        boolean removed = removeItem(id);
+        if (removed) {
+            saveItemsToFile(filename);
+        }
+        return removed;
     }
 }
