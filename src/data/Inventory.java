@@ -24,10 +24,12 @@ public class Inventory {
     }
 
     public boolean removeItem(int id) {
-        for (Item item : items) {
+        Iterator<Item> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
             if (item.getId() == id) {
                 currentWeight -= (item.getWeight() * item.getQuantity());
-                items.remove(item);
+                iterator.remove();
                 return true;
             }
         }
@@ -39,6 +41,7 @@ public class Inventory {
         if (items.isEmpty()) {
             System.out.println("Inventory is empty.");
         } else {
+            items.sort(Comparator.comparing(Item::getName)); // Default sorting by name
             for (Item item : items) {
                 System.out.println(item.getDetails());
             }
@@ -55,7 +58,18 @@ public class Inventory {
         return null;
     }
 
+    public List<Item> filterItemsByType(String type) {
+        List<Item> filteredItems = new ArrayList<>();
+        for (Item item : items) {
+            if (item.getType().equalsIgnoreCase(type)) {
+                filteredItems.add(item);
+            }
+        }
+        return filteredItems;
+    }
+
     public double getCurrentWeight() {
         return currentWeight;
     }
 }
+

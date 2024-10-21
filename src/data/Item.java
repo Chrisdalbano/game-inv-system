@@ -2,7 +2,7 @@ package data;
 import java.util.*;
 
 public class Item {
-    private int id;
+    private final int id;
     private String name;
     private String type;
     private int quantity;
@@ -46,8 +46,17 @@ public class Item {
         this.quantity = newQuantity;
     }
 
+    public void updateDetails(String name, String type, int quantity, double weight, String description) {
+        if (name != null && !name.isEmpty()) this.name = name;
+        if (type != null && !type.isEmpty()) this.type = type;
+        if (quantity >= 0) this.quantity = quantity;
+        if (weight >= 0) this.weight = weight;
+        if (description != null && !description.isEmpty()) this.description = description;
+    }
+
     public String getDetails() {
         return String.format("ID: %d, Name: %s, Type: %s, Quantity: %d, Weight: %.2f, Description: %s", id, name, type, quantity, weight, description);
     }
 }
+
 

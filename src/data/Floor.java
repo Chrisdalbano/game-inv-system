@@ -14,9 +14,11 @@ public class Floor {
     }
 
     public boolean removeItem(int id) {
-        for (Item item : items) {
+        Iterator<Item> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
             if (item.getId() == id) {
-                items.remove(item);
+                iterator.remove();
                 return true;
             }
         }
@@ -43,7 +45,7 @@ public class Floor {
         return null;
     }
 
-    public void loadItemsFromFile(String filename) {
+    public boolean loadItemsFromFile(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -59,8 +61,20 @@ public class Floor {
                     addItem(item);
                 }
             }
+            return true;
         } catch (IOException e) {
             System.out.println("Error reading items from file: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void saveItemsToFile(String filename) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
+            for (Item item : items) {
+                bw.write(String.format("%d,%s,%s,%d,%.2f,%s\n", item.getId(), item.getName(), item.getType(), item.getQuantity(), item.getWeight(), item.getDescription()));
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving items to file: " + e.getMessage());
         }
     }
 }

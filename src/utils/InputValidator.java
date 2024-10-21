@@ -34,4 +34,9 @@ public class InputValidator {
         }
         return value;
     }
+
+    public static String getValidString(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
+    }
 }
