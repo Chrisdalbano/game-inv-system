@@ -3,6 +3,7 @@ package logic;
 import data.Floor;
 import data.Inventory;
 import data.Item;
+import exceptions.ItemNotFoundException;
 import utils.InputValidator;
 
 import java.util.List;
@@ -19,31 +20,31 @@ public class InventoryManager {
     }
 
     // Pick up an item from the floor and add it to the inventory
-    public void pickUpItem(int id) {
+    public void pickUpItem(int id) throws ItemNotFoundException {
         Item item = floor.getItemById(id);
-        if (item != null) {
-            if (inventory.addItem(item)) {
-                floor.removeItem(id);
-                System.out.println("Item picked up and added to inventory.");
-            } else {
-                System.out.println("Could not pick up item. Exceeds inventory weight capacity.");
-            }
+        if (item == null) {
+            throw new ItemNotFoundException("Item with ID " + id + " not found on the floor.");
+        }
+        if (inventory.addItem(item)) {
+            floor.removeItem(id);
+            System.out.println("Item picked up and added to inventory.");
         } else {
-            System.out.println("Item not found on the floor.");
+            System.out.println("Could not pick up item. Exceeds inventory weight capacity.");
         }
     }
 
     // Drop an item from inventory to the floor
-    public void dropItem(int id) {
+    // Drop an item from inventory to the floor
+    public void dropItem(int id) throws ItemNotFoundException {
         Item item = inventory.getItemById(id);
-        if (item != null) {
-            inventory.removeItem(id);
-            floor.addItem(item);
-            System.out.println("Item dropped from inventory to floor.");
-        } else {
-            System.out.println("Item not found in inventory.");
+        if (item == null) {
+            throw new ItemNotFoundException("Item with ID " + id + " not found in inventory.");
         }
+        inventory.removeItem(id);
+        floor.addItem(item);
+        System.out.println("Item dropped from inventory to floor.");
     }
+
 
     // Display all items in the inventory
     public void displayInventory() {
@@ -56,14 +57,13 @@ public class InventoryManager {
     }
 
     // Update an item in the inventory with new details
-    public void updateItemInInventory(int id, String name, String type, int quantity, double weight, String description) {
+    public void updateItemInInventory(int id, String name, String type, int quantity, double weight, String description) throws ItemNotFoundException {
         Item item = inventory.getItemById(id);
-        if (item != null) {
-            item.updateDetails(name, type, quantity, weight, description);
-            System.out.println("Item updated successfully.");
-        } else {
-            System.out.println("Item not found in inventory.");
+        if (item == null) {
+            throw new ItemNotFoundException("Item with ID " + id + " not found in inventory.");
         }
+        item.updateDetails(name, type, quantity, weight, description);
+        System.out.println("Item updated successfully.");
     }
 
     // Save all items to a file (including both floor and inventory)
@@ -116,12 +116,11 @@ public class InventoryManager {
     }
 
     // Manually remove an item from the inventory
-    public void manuallyRemoveItemFromInventory() {
+    public void manuallyRemoveItemFromInventory() throws ItemNotFoundException {
         int id = InputValidator.getValidInt("Enter item ID to remove from inventory: ");
-        if (inventory.removeItem(id)) {
-            System.out.println("Item removed from inventory successfully.");
-        } else {
-            System.out.println("Item not found in inventory.");
+        if (!inventory.removeItem(id)) {
+            throw new ItemNotFoundException("Item with ID " + id + " not found in inventory.");
         }
+        System.out.println("Item removed from inventory successfully.");
     }
 }

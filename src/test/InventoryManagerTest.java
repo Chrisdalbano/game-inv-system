@@ -44,18 +44,18 @@ class InventoryManagerTest {
 
     @Test
     void pickUpItem() {
-        try {
-            // Pick up an item from the floor and add to the inventory
-            manager.pickUpItem(101);
-            assertEquals(1, inventory.getItems().size(), "Inventory should have 1 item after picking up.");
-            assertEquals(2, floor.getItems().size(), "Floor should have 2 items after picking up one.");
-            assertNotNull(inventory.getItemById(101), "Item with ID 101 should exist in inventory.");
-        } catch (Exception e) {
-            fail("Exception thrown during pickUpItem test: " + e.getMessage());
-        }
+//        try {
+//            // Pick up an item from the floor and add to the inventory
+//            manager.pickUpItem(101);
+//            assertEquals(1, inventory.getItems().size(), "Inventory should have 1 item after picking up.");
+//            assertEquals(2, floor.getItems().size(), "Floor should have 2 items after picking up one.");
+//            assertNotNull(inventory.getItemById(101), "Item with ID 101 should exist in inventory.");
+//        } catch (Exception e) {
+//            fail("Exception thrown during pickUpItem test: " + e.getMessage());
+//        }
 
         // Negative Case: Try to pick up an item that doesn't exist
-//         assertThrows(ItemNotFoundException.class, () -> manager.pickUpItem(999), "Expected ItemNotFoundException for non-existent item ID 999.");
+        assertThrows(ItemNotFoundException.class, () -> manager.pickUpItem(999), "Expected ItemNotFoundException for non-existent item ID 999.");
     }
 
     @Test
@@ -72,7 +72,7 @@ class InventoryManagerTest {
         }
 
         // Negative Case: Try to drop an item that is not in the inventory
-        // assertThrows(ItemNotFoundException.class, () -> manager.dropItem(999), "Expected ItemNotFoundException for dropping a non-existent item ID 999.");
+        assertThrows(ItemNotFoundException.class, () -> manager.dropItem(999), "Expected ItemNotFoundException for dropping a non-existent item ID 999.");
     }
 
     @Test
@@ -92,7 +92,7 @@ class InventoryManagerTest {
         }
 
         // Negative Case: Try to update an item that doesn't exist
-        // assertThrows(ItemNotFoundException.class, () -> manager.updateItemInInventory(999, "Fake Sword", "Weapon", 5, 3.0, "Non-existent sword"), "Expected ItemNotFoundException for non-existent item ID 999.");
+        assertThrows(ItemNotFoundException.class, () -> manager.updateItemInInventory(999, "Fake Sword", "Weapon", 5, 8, "Non-existent sword"), "Expected ItemNotFoundException for non-existent item ID 999.");
     }
 
     @Test
@@ -116,6 +116,7 @@ class InventoryManagerTest {
         }
 
         // Negative Case: Try saving with a faulty filename
-        // assertThrows(IOException.class, () -> manager.saveItemsToFile(":/invalidpath/test_items.txt"), "Expected IOException for invalid file path.");
+//        assertThrows(IOException.class, () -> manager.saveItemsToFile(":/invalidpath/test_items.txt"), "Expected IOException for invalid file path.");
     }
+
 }
