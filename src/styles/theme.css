@@ -1,0 +1,99 @@
+/* theme.css */
+.root {
+    -fx-background-color: #2b2b2b;
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-text-fill: #cccccc;
+    -fx-padding: 10;
+}
+
+/* TabPane styling */
+.tab-pane {
+    -fx-padding: 10;
+}
+
+.tab {
+    -fx-background-color: #444;
+    -fx-text-base-color: #999;
+}
+
+.tab:selected {
+    -fx-background-color: #5c5c5c;
+    -fx-text-base-color: #ffffff;
+}
+
+/* Label Styling */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #cccccc;
+}
+
+/* Button Styling */
+.button {
+    -fx-background-color: #555;
+    -fx-text-fill: #dddddd;
+    -fx-border-color: #666;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.button:hover {
+    -fx-background-color: #666;
+    -fx-text-fill: #ffffff;
+}
+
+.button:pressed {
+    -fx-background-color: #777;
+}
+
+/* Input Field and ChoiceBox Styling */
+.choice-box, .text-field {
+    -fx-background-color: #444;
+    -fx-text-fill: #eeeeee;
+    -fx-border-color: #666;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+}
+
+.choice-box:hover, .text-field:hover {
+    -fx-background-color: #555;
+}
+
+.choice-box:focused, .text-field:focused {
+    -fx-background-color: #666;
+}
+
+/* Grid styling for items */
+.grid-pane {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-padding: 10;
+}
+
+/* Item Styling */
+.inventory-item, .floor-item {
+    -fx-border-color: #666;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-background-color: #3b3b3b;
+    -fx-alignment: center;
+}
+
+.inventory-item:hover, .floor-item:hover {
+    -fx-background-color: #555;
+}
+
+.inventory-icon {
+    -fx-padding: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 4, 0, 0, 2);
+}
+
+/* Empty message styling */
+.empty-message {
+    -fx-font-size: 16px;
+    -fx-text-fill: #888888;
+    -fx-padding: 20;
+    -fx-alignment: center;
+}

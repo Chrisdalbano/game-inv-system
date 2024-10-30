@@ -4,7 +4,6 @@ import data.Floor;
 import data.Inventory;
 import data.Item;
 import exceptions.ItemNotFoundException;
-import utils.InputValidator;
 
 import java.util.List;
 
@@ -17,6 +16,31 @@ public class InventoryManager {
         this.inventory = inventory;
         this.floor = floor;
         this.filename = filename;
+    }
+
+    // Set the filename (used when loading items from file)
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    // Loads items from the file into the floor
+    public boolean loadItemsFromFile() {
+        try {
+            return floor.loadItemsFromFile(filename);
+        } catch (Exception e) {
+            System.out.println("Error loading items from file: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Get a list of items in the inventory
+    public List<Item> getInventoryItems() {
+        return inventory.getItems();
+    }
+
+    // Get a list of items on the floor
+    public List<Item> getFloorItems() {
+        return floor.getItems();
     }
 
     // Pick up an item from the floor and add it to the inventory
@@ -34,7 +58,6 @@ public class InventoryManager {
     }
 
     // Drop an item from inventory to the floor
-    // Drop an item from inventory to the floor
     public void dropItem(int id) throws ItemNotFoundException {
         Item item = inventory.getItemById(id);
         if (item == null) {
@@ -43,17 +66,6 @@ public class InventoryManager {
         inventory.removeItem(id);
         floor.addItem(item);
         System.out.println("Item dropped from inventory to floor.");
-    }
-
-
-    // Display all items in the inventory
-    public void displayInventory() {
-        inventory.displayItems();
-    }
-
-    // Display all items on the floor
-    public void displayFloor() {
-        floor.displayItems();
     }
 
     // Update an item in the inventory with new details
@@ -66,7 +78,7 @@ public class InventoryManager {
         System.out.println("Item updated successfully.");
     }
 
-    // Save all items to a file (including both floor and inventory)
+    // Save all items to a file (both floor and inventory)
     public void saveItemsToFile() {
         floor.saveItemsToFile(filename); // Save items on the floor to file
         inventory.saveItemsToFile(filename); // Save items in the inventory to file
@@ -82,45 +94,5 @@ public class InventoryManager {
                 System.out.println(item.getDetails());
             }
         }
-    }
-
-    // Manually add an item to the floor with user input
-    public void manuallyAddItemToFloor() {
-        int id = InputValidator.getValidInt("Enter item ID: ");
-        String name = InputValidator.getValidString("Enter item name: ");
-        String type = InputValidator.getValidString("Enter item type: ");
-        int quantity = InputValidator.getValidInt("Enter item quantity: ");
-        double weight = InputValidator.getValidDouble("Enter item weight: ");
-        String description = InputValidator.getValidString("Enter item description: ");
-
-        Item newItem = new Item(id, name, type, quantity, weight, description);
-        floor.addItem(newItem);
-        System.out.println("Item added to the floor successfully.");
-    }
-
-    // Manually add an item to the inventory with user input
-    public void manuallyAddItemToInventory() {
-        int id = InputValidator.getValidInt("Enter item ID: ");
-        String name = InputValidator.getValidString("Enter item name: ");
-        String type = InputValidator.getValidString("Enter item type: ");
-        int quantity = InputValidator.getValidInt("Enter item quantity: ");
-        double weight = InputValidator.getValidDouble("Enter item weight: ");
-        String description = InputValidator.getValidString("Enter item description: ");
-
-        Item newItem = new Item(id, name, type, quantity, weight, description);
-        if (inventory.addItem(newItem)) {
-            System.out.println("Item added to inventory successfully.");
-        } else {
-            System.out.println("Could not add item to inventory. Exceeds weight capacity.");
-        }
-    }
-
-    // Manually remove an item from the inventory
-    public void manuallyRemoveItemFromInventory() throws ItemNotFoundException {
-        int id = InputValidator.getValidInt("Enter item ID to remove from inventory: ");
-        if (!inventory.removeItem(id)) {
-            throw new ItemNotFoundException("Item with ID " + id + " not found in inventory.");
-        }
-        System.out.println("Item removed from inventory successfully.");
     }
 }

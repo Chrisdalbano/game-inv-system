@@ -21,3 +21,4 @@
 221;Chainmail Vest;Armor;1;20.00;Provides good protection against attacks.
 222;Dragon Scale;Rare;1;1.00;A scale from a dragon, highly valuable.
 223;Health Potion (Large);Consumable;2;1.00;Restores a significant amount of health.
+878;eighitem;asd;3;20.00;asd
