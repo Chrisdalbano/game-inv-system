@@ -48,7 +48,7 @@ public class InventoryPane {
 
         pane.getChildren().addAll(new Label("Inventory"), createControlPanel(), scrollPane, createDropButton());
 
-        refresh();
+        refresh(); // Initialize the items and refresh the grid
     }
 
     public VBox getPane() {
@@ -75,7 +75,7 @@ public class InventoryPane {
         Button clearButton = new Button("Clear Filter");
         clearButton.setOnAction(e -> clearFilter());
 
-        controlPanel.getChildren().addAll(new Label("Sort by:"), sortChoiceBox, categoryChoiceBox, filterTextField, clearButton);
+        controlPanel.getChildren().addAll(new Label("Sort by:"), sortChoiceBox, new Label("Category:"), categoryChoiceBox, filterTextField, clearButton);
         return controlPanel;
     }
 
@@ -126,10 +126,14 @@ public class InventoryPane {
 
     private void filterItems() {
         String filterText = filterTextField.getText().toLowerCase();
-        String category = categoryChoiceBox.getValue();
+        String selectedCategory = categoryChoiceBox.getValue();
+
         inventoryItems.setAll(manager.getInventoryItems().stream()
-                .filter(item -> (filterText.isEmpty() || item.getName().toLowerCase().contains(filterText)) &&
-                        (!"Select Category".equals(category) && category != null || item.getType().equalsIgnoreCase(category)))
+                .filter(item -> {
+                    boolean matchesName = filterText.isEmpty() || item.getName().toLowerCase().contains(filterText);
+                    boolean matchesCategory = "Select Category".equals(selectedCategory) || item.getType().equalsIgnoreCase(selectedCategory);
+                    return matchesName && matchesCategory;
+                })
                 .collect(Collectors.toList()));
         refreshGrid();
     }
