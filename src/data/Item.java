@@ -60,6 +60,8 @@ public class Item {
         }
     }
 
+
+
     public void setWeight(double weight) {
         if (weight >= 0) {
             this.weight = weight;
@@ -89,4 +91,6 @@ public class Item {
     public String toFileString() {
         return String.format("%d;%s;%s;%d;%.2f;%s", id, name, type, quantity, weight, description);
     }
+
+
 }

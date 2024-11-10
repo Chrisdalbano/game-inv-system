@@ -16,14 +16,15 @@ public class Floor {
         items.add(item);
     }
 
+    public void clearItems() {
+        items.clear();
+    }
+
     public boolean removeItem(int id) {
-        Iterator<Item> iterator = items.iterator();
-        while (iterator.hasNext()) {
-            Item item = iterator.next();
-            if (item.getId() == id) {
-                iterator.remove();
-                return true;
-            }
+        Item item = getItemById(id);
+        if (item != null) {
+            items.remove(item);
+            return true;
         }
         System.out.println("Item not found on the floor.");
         return false;
@@ -55,6 +56,7 @@ public class Floor {
     public boolean loadItemsFromFile(String filename) throws InvalidItemFormatException {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
+            items.clear(); // Clear existing items before loading new ones
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length == 6) {
@@ -89,21 +91,5 @@ public class Floor {
         } catch (IOException e) {
             System.out.println("Error saving items to file: " + e.getMessage());
         }
-    }
-
-
-    public boolean manuallyAddItemToFloor(String filename, int id, String name, String type, int quantity, double weight, String description) {
-        Item item = new Item(id, name, type, quantity, weight, description);
-        addItem(item);
-        saveItemsToFile(filename);
-        return true;
-    }
-
-    public boolean manuallyRemoveItemFromFloor(String filename, int id) {
-        boolean removed = removeItem(id);
-        if (removed) {
-            saveItemsToFile(filename);
-        }
-        return removed;
     }
 }

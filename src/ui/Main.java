@@ -28,20 +28,19 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         inventory = new Inventory(50.0);
         floor = new Floor();
-        manager = new InventoryManager(inventory, floor, "");
+        manager = new InventoryManager(inventory, floor, ""); // Initialize without a file path
 
-        // Create the main layout
         BorderPane root = new BorderPane();
 
-        // Create the UI components
+        // Create UI components
         TopMenu topMenu = new TopMenu(manager, primaryStage, this);
         inventoryPane = new InventoryPane(manager, this);
         floorPane = new FloorPane(manager, this);
 
         // Empty message label, centered with padding
-        emptyMessageLabel = new Label("Your Inventory Management is empty, let's start by importing some items from a text file.");
+        emptyMessageLabel = new Label("Your Inventory Management is empty. Load items from a database or text file.");
         emptyMessageLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
-        emptyMessageLabel.setVisible(false);
+        emptyMessageLabel.setVisible(true);
 
         StackPane centerPane = new StackPane(emptyMessageLabel);
         centerPane.setAlignment(Pos.CENTER);
@@ -67,13 +66,14 @@ public class Main extends Application {
         primaryStage.setTitle("Inventory Management System");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        refreshUI();
     }
 
     public void refreshUI() {
         boolean isInventoryEmpty = inventory.getItems().isEmpty();
         boolean isFloorEmpty = floor.getItems().isEmpty();
+
+        System.out.println("Inventory items: " + inventory.getItems().size());
+        System.out.println("Floor items: " + floor.getItems().size()); // Debug to check items in Floor
 
         emptyMessageLabel.setVisible(isInventoryEmpty && isFloorEmpty);
         inventoryPane.refresh();

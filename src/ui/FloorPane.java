@@ -44,6 +44,9 @@ public class FloorPane {
         this.scrollPane.setFitToWidth(true);
         this.scrollPane.setStyle("-fx-background: #2c2c2c; -fx-background-color: #2c2c2c;");
 
+        // Initialize ObservableList
+        floorItems = FXCollections.observableArrayList();
+
         // Add components to the pane
         pane.getChildren().addAll(new Label("Floor Items"), createControlPanel(), scrollPane);
 
@@ -52,7 +55,7 @@ public class FloorPane {
         btnPickUp.setOnAction(e -> pickUpItem());
         pane.getChildren().add(btnPickUp);
 
-        refresh();
+        refresh(); // Refresh the grid to display items
     }
 
     public VBox getPane() {
@@ -64,22 +67,18 @@ public class FloorPane {
         controlPanel.setAlignment(Pos.CENTER);
         controlPanel.setPadding(new Insets(10, 0, 10, 0));
 
-        // Sort options
         sortChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList("ID", "Name", "Quantity", "Weight"));
         sortChoiceBox.setValue("ID");
         sortChoiceBox.setOnAction(e -> sortItems());
 
-        // Category filter options (with placeholder workaround)
         categoryChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList("Select Category", "Weapon", "Armor", "Consumable", "Scroll", "Misc"));
         categoryChoiceBox.getSelectionModel().selectFirst();
         categoryChoiceBox.setOnAction(e -> filterByCategory());
 
-        // Name filter field
         filterTextField = new TextField();
         filterTextField.setPromptText("Filter by name...");
         filterTextField.textProperty().addListener((obs, oldText, newText) -> filterItems());
 
-        // Clear filter button
         Button clearButton = new Button("Clear Filter");
         clearButton.setOnAction(e -> clearFilter());
 
@@ -159,7 +158,13 @@ public class FloorPane {
     }
 
     public void refresh() {
-        floorItems = FXCollections.observableArrayList(manager.getFloorItems());
+        // Use setAll to ensure ObservableList updates properly
+        floorItems.setAll(manager.getFloorItems());
+        if (floorItems.isEmpty()) {
+            System.out.println("No floor items available.");
+        } else {
+            System.out.println("Floor items available: " + floorItems.size());
+        }
         refreshGrid();
     }
 
