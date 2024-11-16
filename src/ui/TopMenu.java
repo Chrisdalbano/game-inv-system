@@ -7,11 +7,25 @@ import javafx.stage.Stage;
 import logic.InventoryManager;
 import java.io.File;
 
+/**
+ * TopMenu class creates the top menu bar for the Inventory Management System.
+ * This class provides options to load items from an external database using a file chooser.
+ * It interacts with the InventoryManager to load items and refreshes the UI upon successful loading.
+ */
+
 public class TopMenu {
     private InventoryManager manager;
     private Stage stage;
     private Main main;
     private HBox menu;
+
+    /**
+     * Constructs a TopMenu object and initializes the UI components.
+     *
+     * @param manager the InventoryManager used to handle data operations
+     * @param stage the primary stage used for file chooser dialogs
+     * @param main the Main class instance to facilitate UI refresh operations
+     */
 
     public TopMenu(InventoryManager manager, Stage stage, Main main) {
         this.manager = manager;

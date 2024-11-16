@@ -8,10 +8,24 @@ import exceptions.ItemNotFoundException;
 import java.sql.*;
 import java.util.List;
 
+/**
+ * InventoryManager class handles the logic for managing items in the inventory and on the floor.
+ * It interacts with a SQLite database to load and save items and provides methods to update item details.
+ * This class also manages the pickup and drop operations for items between the inventory and the floor.
+ */
+
 public class InventoryManager {
     private Inventory inventory;
     private Floor floor;
     private String dbFilePath; // Path to the SQLite database
+
+    /**
+     * Constructs an InventoryManager object with the given inventory, floor, and database file path.
+     *
+     * @param inventory the Inventory object to manage inventory items
+     * @param floor the Floor object to manage floor items
+     * @param dbFilePath the file path to the SQLite database
+     */
 
     public InventoryManager(Inventory inventory, Floor floor, String dbFilePath) {
         this.inventory = inventory;

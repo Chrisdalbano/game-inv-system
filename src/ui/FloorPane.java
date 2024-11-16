@@ -17,7 +17,20 @@ import utils.IconHelper;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+/**
+ * FloorPane class manages the UI for displaying and interacting with items placed on the floor.
+ * It provides features such as sorting, filtering, and picking up items to add to the inventory.
+ * The items are displayed in a grid layout, with options for sorting and filtering via a control panel.
+ */
+
 public class FloorPane {
+    /**
+     * Constructs a FloorPane object and initializes the UI components and layout.
+     * Sets up the control panel for sorting and filtering items, and initializes the grid for displaying items.
+     *
+     * @param manager the InventoryManager used to manage item data and interactions
+     * @param main the Main class instance used for displaying item details and refreshing the UI
+     */
     private InventoryManager manager;
     private Main main;
     private VBox pane;

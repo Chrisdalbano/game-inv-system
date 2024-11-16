@@ -8,6 +8,17 @@ public class Item {
     private double weight;
     private String description;
 
+    /**
+     * Constructs an Item object with the specified properties.
+     *
+     * @param id the unique identifier of the item
+     * @param name the name of the item
+     * @param type the type/category of the item
+     * @param quantity the quantity of the item
+     * @param weight the weight of the item
+     * @param description a description of the item
+     */
+
     public Item(int id, String name, String type, int quantity, double weight, String description) {
         this.id = id;
         this.name = name;

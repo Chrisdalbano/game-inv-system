@@ -5,8 +5,17 @@ import exceptions.InvalidItemFormatException;
 import java.util.*;
 import java.io.*;
 
+/**
+ * Floor class manages a collection of items placed on the floor.
+ * Provides methods to add, remove, display, load from a file, and save items to a file.
+ */
+
 public class Floor {
     private List<Item> items;
+
+    /**
+     * Constructs a Floor object and initializes an empty list of items.
+     */
 
     public Floor() {
         this.items = new ArrayList<>();

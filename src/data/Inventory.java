@@ -6,10 +6,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Inventory class manages a collection of items and keeps track of the total weight of all items.
+ * Provides methods to add, remove, update, and display items, and to save the items to a file.
+ */
+
 public class Inventory {
     private double maxWeightCapacity;
     private double currentWeight;
     private List<Item> items;
+
+    /**
+     * Constructs an Inventory object with a specified maximum weight capacity.
+     *
+     * @param maxWeightCapacity the maximum allowable weight for the inventory
+     */
 
     public Inventory(double maxWeightCapacity) {
         this.maxWeightCapacity = maxWeightCapacity;

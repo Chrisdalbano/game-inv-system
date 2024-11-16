@@ -16,7 +16,24 @@ import logic.InventoryManager;
 
 import java.util.Objects;
 
+/**
+ * Main class for the Inventory Management System.
+ * This class extends the JavaFX Application and sets up the primary user interface components.
+ * It manages the initialization and launching of the JavaFX application, including creating
+ * UI elements such as the TopMenu, InventoryPane, and FloorPane.
+ *
+ * <p>The Main class interacts with the InventoryManager to handle data and updates
+ * the UI based on the state of the inventory and floor items.</p>
+ */
+
 public class Main extends Application {
+    /**
+     * Starts the JavaFX application.
+     * Sets up the main layout and initializes UI components such as menus, tabs,
+     * and the empty message label. Loads the stylesheets and displays the primary stage.
+     *
+     * @param primaryStage the primary stage for this JavaFX application
+     */
     private InventoryManager manager;
     private Inventory inventory;
     private Floor floor;
