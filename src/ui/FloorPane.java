@@ -1,6 +1,7 @@
 package ui;
 
 import data.Item;
+import exceptions.ItemNotFoundException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -14,23 +15,16 @@ import javafx.scene.control.ScrollPane;
 import logic.InventoryManager;
 import utils.IconHelper;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
  * FloorPane class manages the UI for displaying and interacting with items placed on the floor.
- * It provides features such as sorting, filtering, and picking up items to add to the inventory.
+ * It provides features such as sorting, filtering, crafting new items, and deleting items.
  * The items are displayed in a grid layout, with options for sorting and filtering via a control panel.
  */
-
 public class FloorPane {
-    /**
-     * Constructs a FloorPane object and initializes the UI components and layout.
-     * Sets up the control panel for sorting and filtering items, and initializes the grid for displaying items.
-     *
-     * @param manager the InventoryManager used to manage item data and interactions
-     * @param main the Main class instance used for displaying item details and refreshing the UI
-     */
     private InventoryManager manager;
     private Main main;
     private VBox pane;
@@ -92,10 +86,16 @@ public class FloorPane {
         filterTextField.setPromptText("Filter by name...");
         filterTextField.textProperty().addListener((obs, oldText, newText) -> filterItems());
 
+        Button craftButton = new Button("Craft Item");
+        craftButton.setOnAction(e -> craftItem());
+
+        Button deleteButton = new Button("Delete Item");
+        deleteButton.setOnAction(e -> deleteItem());
+
         Button clearButton = new Button("Clear Filter");
         clearButton.setOnAction(e -> clearFilter());
 
-        controlPanel.getChildren().addAll(new Label("Sort by:"), sortChoiceBox, new Label("Category:"), categoryChoiceBox, filterTextField, clearButton);
+        controlPanel.getChildren().addAll(new Label("Sort by:"), sortChoiceBox, new Label("Category:"), categoryChoiceBox, filterTextField, craftButton, deleteButton, clearButton);
         return controlPanel;
     }
 
@@ -171,14 +171,63 @@ public class FloorPane {
     }
 
     public void refresh() {
-        // Use setAll to ensure ObservableList updates properly
         floorItems.setAll(manager.getFloorItems());
-        if (floorItems.isEmpty()) {
-            System.out.println("No floor items available.");
-        } else {
-            System.out.println("Floor items available: " + floorItems.size());
-        }
         refreshGrid();
+    }
+
+    private void craftItem() {
+        TextInputDialog idDialog = new TextInputDialog();
+        idDialog.setTitle("Craft Item");
+        idDialog.setHeaderText("Enter ID for the new item:");
+
+        idDialog.showAndWait().ifPresent(idStr -> {
+            try {
+                int id = Integer.parseInt(idStr);
+
+                TextInputDialog nameDialog = new TextInputDialog();
+                nameDialog.setTitle("Craft Item");
+                nameDialog.setHeaderText("Enter Name for the new item:");
+
+                nameDialog.showAndWait().ifPresent(name -> {
+                    ChoiceDialog<String> typeDialog = new ChoiceDialog<>("Misc", "Weapon", "Armor", "Consumable", "Scroll");
+                    typeDialog.setTitle("Craft Item");
+                    typeDialog.setHeaderText("Select the type (category) for the new item:");
+
+                    typeDialog.showAndWait().ifPresent(type -> {
+                        TextInputDialog descDialog = new TextInputDialog();
+                        descDialog.setTitle("Craft Item");
+                        descDialog.setHeaderText("Enter a description for the new item:");
+
+                        descDialog.showAndWait().ifPresent(description -> {
+                            try {
+                                manager.craftItemOnFloor(id, name, type, 1, 1.0, description);
+                                main.refreshUI();
+                            } catch (SQLException e) {
+                                DialogHelper.showError("Error crafting item: " + e.getMessage());
+                            }
+                        });
+                    });
+                });
+            } catch (Exception e) {
+                DialogHelper.showError("Error crafting item: " + e.getMessage());
+            }
+        });
+    }
+
+    private void deleteItem() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Delete Item");
+        dialog.setHeaderText("Enter the ID of the item to delete:");
+
+        dialog.showAndWait().ifPresent(idStr -> {
+            try {
+                int id = Integer.parseInt(idStr);
+                manager.deleteFloorItem(id);
+                main.refreshUI();
+            } catch (Exception e) {
+                DialogHelper.showError("Error deleting item: " + e.getMessage());
+            }
+        });
     }
 
     private void pickUpItem() {

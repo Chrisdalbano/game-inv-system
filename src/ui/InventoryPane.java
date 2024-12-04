@@ -18,6 +18,10 @@ import utils.IconHelper;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+/**
+ * InventoryPane class manages the UI for displaying and interacting with items in the inventory.
+ * It provides features such as sorting, filtering, updating name and description, and dropping items to the floor.
+ */
 public class InventoryPane {
     private InventoryManager manager;
     private Main main;
@@ -72,10 +76,13 @@ public class InventoryPane {
         filterTextField.setPromptText("Filter by name...");
         filterTextField.textProperty().addListener((obs, oldText, newText) -> filterItems());
 
+        Button updateButton = new Button("Update Name/Description");
+        updateButton.setOnAction(e -> updateInventoryItem());
+
         Button clearButton = new Button("Clear Filter");
         clearButton.setOnAction(e -> clearFilter());
 
-        controlPanel.getChildren().addAll(new Label("Sort by:"), sortChoiceBox, new Label("Category:"), categoryChoiceBox, filterTextField, clearButton);
+        controlPanel.getChildren().addAll(new Label("Sort by:"), sortChoiceBox, new Label("Category:"), categoryChoiceBox, filterTextField, updateButton, clearButton);
         return controlPanel;
     }
 
@@ -143,6 +150,46 @@ public class InventoryPane {
         categoryChoiceBox.getSelectionModel().selectFirst();
         inventoryItems.setAll(manager.getInventoryItems());
         refreshGrid();
+    }
+
+    private void updateInventoryItem() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Update Inventory Item");
+        dialog.setHeaderText("Enter the ID of the item to update:");
+
+        dialog.showAndWait().ifPresent(itemIdStr -> {
+            try {
+                int itemId = Integer.parseInt(itemIdStr);
+                Item item = manager.getInventoryItems().stream()
+                        .filter(i -> i.getId() == itemId)
+                        .findFirst()
+                        .orElseThrow(() -> new ItemNotFoundException("Item not found!"));
+
+                // Update Name Dialog
+                TextInputDialog updateNameDialog = new TextInputDialog(item.getName());
+                updateNameDialog.setTitle("Update Item Name");
+                updateNameDialog.setHeaderText("Update Name for Item ID: " + itemId);
+                updateNameDialog.setContentText("Enter new name:");
+
+                updateNameDialog.showAndWait().ifPresent(newName -> {
+                    TextInputDialog updateDescDialog = new TextInputDialog(item.getDescription());
+                    updateDescDialog.setTitle("Update Item Description");
+                    updateDescDialog.setHeaderText("Update Description for Item ID: " + itemId);
+                    updateDescDialog.setContentText("Enter new description:");
+
+                    updateDescDialog.showAndWait().ifPresent(newDesc -> {
+                        try {
+                            manager.updateItemInInventory(itemId, newName, item.getType(), item.getQuantity(), item.getWeight(), newDesc);
+                            main.refreshUI();
+                        } catch (ItemNotFoundException e) {
+                            showAlert("Error", "Failed to update item: " + e.getMessage());
+                        }
+                    });
+                });
+            } catch (Exception e) {
+                showAlert("Error", e.getMessage());
+            }
+        });
     }
 
     private void refreshGrid() {

@@ -197,4 +197,22 @@ public class InventoryManager {
     public void setDatabaseFilePath(String dbFilePath) {
         this.dbFilePath = dbFilePath;
     }
+
+    public void craftItemOnFloor(int id, String name, String type, int quantity, double weight, String description) throws SQLException {
+        Item newItem = new Item(id, name, type, quantity, weight, description);
+        floor.addItem(newItem);
+        saveItemsToDatabase(); // Save the changes to the database
+        System.out.println("Crafted a new item on the floor: " + newItem.getDetails());
+    }
+
+    // Delete an item from the floor by ID
+    public void deleteFloorItem(int id) throws ItemNotFoundException, SQLException {
+        Item item = floor.getItemById(id);
+        if (item == null) {
+            throw new ItemNotFoundException("Item with ID " + id + " not found on the floor.");
+        }
+        floor.removeItem(id);
+        saveItemsToDatabase(); // Save the changes to the database
+        System.out.println("Deleted item with ID " + id + " from the floor.");
+    }
 }
